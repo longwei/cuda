@@ -38,7 +38,7 @@ int main()
   /*
    * `cudaDeviceSynchronize` will block the CPU stream until
    * all GPU kernels have completed.  
-   * It wait for GPU work. If removed, only CPU output will be printed.
+   * It wait/verify for GPU work. If removed, only CPU output will be printed.
    */
 
   cudaDeviceSynchronize();
@@ -47,3 +47,6 @@ int main()
   helloGPU2<<<1, 1>>>();
   cudaDeviceSynchronize();
 }
+
+// what's the NVIDIA CUDA Compiler Driver
+// https://docs.nvidia.com/cuda/cuda-compiler-driver-nvcc/index.html
