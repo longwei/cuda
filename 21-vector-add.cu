@@ -88,10 +88,14 @@ int main()
    * 512: 0.104
    * 512: 0.104
    * 1024: 0.105
+   * adjust numberOfBlocks to max the parallelism: 0.091 
    */
 
   threadsPerBlock = 1024;
   numberOfBlocks = (N + threadsPerBlock - 1) / threadsPerBlock;
+  if (numberOfBlocks % 80 != 0) {
+    numberOfBlocks = ((numberOfBlocks / 80) + 1) * 80;
+  }
 
   cudaError_t addVectorsErr;
   cudaError_t asyncErr;
