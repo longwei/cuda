@@ -1,4 +1,4 @@
-// 01-vector-add.cu
+// 01-vector-add-prefetch-solution.cu
 #include <stdio.h>
 
 void initWith(float num, float *a, int N)
@@ -56,6 +56,10 @@ int main()
   initWith(3, a, N);
   initWith(4, b, N);
   initWith(0, c, N);
+
+  cudaMemPrefetchAsync(a, size, deviceId);
+  cudaMemPrefetchAsync(b, size, deviceId);
+  cudaMemPrefetchAsync(c, size, deviceId);
 
   size_t threadsPerBlock;
   size_t numberOfBlocks;
