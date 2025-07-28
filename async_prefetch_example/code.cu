@@ -1,4 +1,4 @@
-// 01-init-kernel-solution.cu
+// 01-prefetch-check-solution.cu
 #include <stdio.h>
 
 __global__
@@ -82,6 +82,8 @@ int main()
 
   asyncErr = cudaDeviceSynchronize();
   if(asyncErr != cudaSuccess) printf("Error: %s\n", cudaGetErrorString(asyncErr));
+
+  cudaMemPrefetchAsync(c, size, cudaCpuDeviceId);
 
   checkElementsAre(7, c, N);
 
