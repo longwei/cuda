@@ -1,9 +1,14 @@
-// 01-vector-add-prefetch-solution.cu
+// 01-init-kernel-solution.cu
 #include <stdio.h>
 
+__global__
 void initWith(float num, float *a, int N)
 {
-  for(int i = 0; i < N; ++i)
+
+  int index = threadIdx.x + blockIdx.x * blockDim.x;
+  int stride = blockDim.x * gridDim.x;
+
+  for(int i = index; i < N; i += stride)
   {
     a[i] = num;
   }
@@ -53,10 +58,6 @@ int main()
   cudaMallocManaged(&b, size);
   cudaMallocManaged(&c, size);
 
-  initWith(3, a, N);
-  initWith(4, b, N);
-  initWith(0, c, N);
-
   cudaMemPrefetchAsync(a, size, deviceId);
   cudaMemPrefetchAsync(b, size, deviceId);
   cudaMemPrefetchAsync(c, size, deviceId);
@@ -69,6 +70,10 @@ int main()
 
   cudaError_t addVectorsErr;
   cudaError_t asyncErr;
+
+  initWith<<<numberOfBlocks, threadsPerBlock>>>(3, a, N);
+  initWith<<<numberOfBlocks, threadsPerBlock>>>(4, b, N);
+  initWith<<<numberOfBlocks, threadsPerBlock>>>(0, c, N);
 
   addVectorsInto<<<numberOfBlocks, threadsPerBlock>>>(c, a, b, N);
 
